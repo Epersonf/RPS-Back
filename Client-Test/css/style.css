@@ -1,0 +1,33 @@
+/* #region GENERAL */
+
+:root {
+
+    /* do not use pixels for font-size*/
+    font-size: 62.5%;
+
+    /* palette */
+    --primary-chiari: #fafafa;
+    --secondary-chiari: #eee;
+    --tertiary-chiari: #ddd;
+	
+	--primary-scure: #333;
+	--secondary-scure: #222;
+	--tertiary-scure: #111;
+}
+
+/* #endregion GENERAL */
+
+/* #region HEADER */
+
+
+/* #endregion HEADER */
+
+/* #region MAIN */
+
+
+/* #endregion MAIN */
+
+/* #region FOOTER */
+
+
+/* #endregion FOOTER */
