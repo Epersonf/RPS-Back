@@ -9,8 +9,7 @@ export const roomPath = (app) => {
                 res.end();
                 return;
             }
-
-            res.write(JSON.stringify(room.gameJson()));
+            res.write(JSON.stringify(room.gameJson(req.headers.authorization)));
             res.end();
         }
     );

@@ -13,7 +13,7 @@ export class Player {
     }
 
     addCard(id) {
-
+        this.cards.push(id);
     }
 
     update() {
@@ -22,6 +22,6 @@ export class Player {
 
     json(showCards) {
         if (!showCards) return new Array(this.cards.length).fill(-1);
-        return {...this.cards};
+        return [...this.cards];
     }
 }
