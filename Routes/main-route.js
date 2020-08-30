@@ -1,5 +1,4 @@
-
-export const mainPath(app) {
+export const mainPath = (app) => {
     app.get('/',
         (req, res, next) => {
             res.header("Access-Control-Allow-Origin", "*");
@@ -7,6 +6,7 @@ export const mainPath(app) {
 
             switch(req.method) {
                 case 'GET':
+                    res.write(JSON.stringify({'name': 'Tester'}));
                     break;
                 case 'POST':
                     res.write("test");
