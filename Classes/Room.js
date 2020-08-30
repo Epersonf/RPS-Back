@@ -18,7 +18,7 @@ export class Room {
         for (let i = 0; i < maxAmountOfPlayers - 1; i++)
             this.players.push(new Bot());
 
-        this.amountOfPlayers = 0;
+        this.amountOfPlayers = 1;
         this.maxAmountOfPlayers = clamp(maxAmountOfPlayers, 2, 4);
     }
 
@@ -30,19 +30,22 @@ export class Room {
         return false;
     }
 
-    addPlayer() {
+    addPlayer(name) {
         let index = this.canJoin();
         if (!index) return false;
         this.players.splice(index, 1);
-        this.players.push(new User());
+        let user = new User(name);
+        this.players.push(user);
+        this.amountOfPlayers++;
+        return user;
     }
 
     removePlayer(id) {
-
+        
     }
     
     update() {
-
+        this.players.forEach(e => e.update());
     }
 
     json() {
@@ -50,7 +53,8 @@ export class Room {
             'id': this.id,
             'name': this.name,
             'amount_of_players': this.amountOfPlayers,
-            'max_amount_of_players': this.maxAmountOfPlayers
+            'max_amount_of_players': this.maxAmountOfPlayers,
+            'has_password': (this.password != '')
         };
     }
 

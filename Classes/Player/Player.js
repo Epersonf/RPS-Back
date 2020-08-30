@@ -3,6 +3,8 @@
 //1 = paper
 //2 = scissors
 
+import { generateToken } from "../../Utility/util.js";
+
 export class Player {
     constructor(name) {
         this.token = generateToken();
@@ -11,6 +13,10 @@ export class Player {
     }
 
     addCard(id) {
+
+    }
+
+    update() {
 
     }
 

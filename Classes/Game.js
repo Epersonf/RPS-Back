@@ -31,7 +31,7 @@ export class Game {
 
     getRoom(id) {
         for (let i in this.tables) {
-            if (this.tables[i] === id) return this.tables[i];
+            if (this.tables[i].id == id) return this.tables[i];
         }
         return false;
     }
