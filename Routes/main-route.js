@@ -10,7 +10,8 @@ export const mainPath = (app) => {
 
     app.post('/',
         (req, res) => {
-            const newTable = game.createTable(req.body.max_amount_of_players);
+            const param = req.body;
+            const newTable = game.createTable(param.max_amount_of_players, param.name, param.password);
             res.write(JSON.stringify(newTable.json()));
             res.end();
         }

@@ -9,12 +9,12 @@ export class Game {
         this.tables.forEach((e) => e.update());
     }
 
-    createTable(maxAmountOfPlayers=4) {
+    createTable(maxAmountOfPlayers=4, name, password) {
         let tableId = 0;
         if (this.tables.length > 0)
             tableId = this.tables[this.tables.length - 1].id + 1;
         
-        let newTable = new Room(tableId, this, maxAmountOfPlayers);
+        let newTable = new Room(tableId, this, maxAmountOfPlayers, name, password);
         this.tables.push(newTable);
         return newTable;
     }

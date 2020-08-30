@@ -9,7 +9,7 @@ export class Room {
         this.game = game;
         this.players = [];
         this.amountOfPlayers = 0;
-        this.maxAmountOfPlayers = clamp(maxAmountOfPlayers, 1, 4);
+        this.maxAmountOfPlayers = clamp(maxAmountOfPlayers, 2, 4);
     }
 
     addPlayer() {
