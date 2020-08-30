@@ -1,13 +1,22 @@
-import { Table } from './Table.js';
+import { Room } from './Room.js';
 
 export class Game {
     constructor () {
         this.tables = [];
     }
 
-    createTable() {
-        const tableId = this.tables[this.tables.length - 1].id + 1;
-        this.tables.push(new Table(tableId, this));
+    update() {
+        this.tables.forEach((e) => e.update());
+    }
+
+    createTable(maxAmountOfPlayers=4) {
+        let tableId = 0;
+        if (this.tables.length > 0)
+            tableId = this.tables[this.tables.length - 1].id + 1;
+        
+        let newTable = new Room(tableId, this, maxAmountOfPlayers);
+        this.tables.push(newTable);
+        return newTable;
     }
 
     removeTable(id) {
@@ -18,5 +27,11 @@ export class Game {
                 break;
             }
         }
+    }
+
+    tablesJson() {
+        let build = [];
+        this.tables.forEach((e) => build.push(e.json()));
+        return build;
     }
 }

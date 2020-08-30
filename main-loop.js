@@ -4,8 +4,9 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export const game = new Game();
+
 export default function GameLoop() {
-    const game = new Game();
 
     const callUpdate = async () => {
         await sleep(500);
@@ -17,5 +18,5 @@ export default function GameLoop() {
 }
 
 function Update() {
-    
+    game.update();
 }

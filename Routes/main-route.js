@@ -1,24 +1,18 @@
+import {game} from '../main-loop.js';
+
 export const mainPath = (app) => {
     app.get('/',
-        (req, res, next) => {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-
-            switch(req.method) {
-                case 'GET':
-                    res.write(JSON.stringify({'name': 'Tester'}));
-                    break;
-                case 'POST':
-                    res.write("test");
-                    break;
-                case 'PUT':
-                    break;
-                case 'DELETE':
-                    break;
-            }
-
+        (req, res) => {
+            res.write(JSON.stringify(game.tablesJson()));
             res.end();
-            next();
+        }
+    );
+
+    app.post('/',
+        (req, res) => {
+            const newTable = game.createTable(req.body.max_amount_of_players);
+            res.write(JSON.stringify(newTable.json()));
+            res.end();
         }
     );
 }
