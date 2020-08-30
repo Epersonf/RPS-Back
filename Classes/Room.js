@@ -36,16 +36,15 @@ export class Room {
         let index = this.canJoin();
         if (!index) return false;
         let deck = this.players[index].cards;
-        this.players.splice(index, 1);
         let user = new User(name);
         user.cards = deck;
-        this.players.push(user);
+        this.players[index] = user;
         this.amountOfPlayers++;
         return user;
     }
 
     removePlayer(id) {
-
+        
     }
     
     update() {
@@ -63,7 +62,12 @@ export class Room {
     }
 
     gameJson(token) {
-        return this.players.map((e) => e.json(token == e.token));
+        return this.players.map((e, index) => {
+            return {
+                ...e.json(token == e.token),
+                'index': index
+            }
+        });
     }
 
     distributeCards() {

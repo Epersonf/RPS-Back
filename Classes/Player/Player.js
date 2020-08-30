@@ -6,22 +6,37 @@
 import { generateToken } from "../../Utility/util.js";
 
 export class Player {
-    constructor(name) {
+    constructor(name, room) {
+        this.room = room;
         this.token = generateToken();
         this.name = name;
         this.cards = [];
+        this.afkCount = 10;
     }
 
     addCard(id) {
         this.cards.push(id);
     }
 
-    update() {
+    removeCard(id) {
+        this.cards.splice(id, 1);
+    }
 
+    playCard(id, token) {
+        if (token != this.token) return;
+        this.removeCard(id);
+    }
+
+    update() {
+        this.afkCount--;
+    }
+
+    activityCheckout() {
+        this.afkCount = 10;
     }
 
     json(showCards) {
-        if (!showCards) return new Array(this.cards.length).fill(-1);
-        return [...this.cards];
+        if (!showCards) return {'name': this.name, 'cards': new Array(this.cards.length).fill(-1)};
+        return {'name': this.name, 'cards': this.cards};
     }
 }

@@ -1,8 +1,8 @@
 import { Player } from '../Player.js';
 
 export class Bot extends Player {
-    constructor(name) {
+    constructor(name, room) {
         name = "Bot " + Math.round(Math.random() * 1000);
-        super(name);
+        super(name, room);
     }
 }

@@ -35,4 +35,20 @@ export const roomPath = (app) => {
             res.end();
         }
     );
+
+    app.post('/room/:id/:playerId/:cardId',
+        (req, res) => {
+            const roomId = parseInt(req.params.id);            
+            const playerId = parseInt(req.params.playerId);
+            const cardId = parseInt(req.params.cardId);
+            const token = req.headers.authorization;
+            let room = game.getRoom(roomId);
+            if (!room) {
+                res.end();
+                return;
+            }
+
+            room.players[playerId].playCard(cardId, token);
+        }
+    );
 }
