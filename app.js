@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import {loginPath} from './Routes/login-route.js';
 import GameLoop from './main-loop.js';
 import { mainPath } from './Routes/main-route.js';
+import { roomPath } from './Routes/room-route.js';
 
 const port = 4000;
 const app = express();
@@ -23,6 +24,7 @@ app.use(function(req, res, next) {
 
 mainPath(app);
 loginPath(app);
+roomPath(app);
 
 GameLoop();
 

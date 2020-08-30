@@ -9,12 +9,12 @@ export class Game {
         this.tables.forEach((e) => e.update());
     }
 
-    createTable(maxAmountOfPlayers=4, name, password) {
+    createTable(maxAmountOfPlayers=4, name, password, playerName) {
         let tableId = 0;
         if (this.tables.length > 0)
             tableId = this.tables[this.tables.length - 1].id + 1;
         
-        let newTable = new Room(tableId, this, maxAmountOfPlayers, name, password);
+        let newTable = new Room(tableId, this, maxAmountOfPlayers, name, password, playerName);
         this.tables.push(newTable);
         return newTable;
     }
@@ -27,6 +27,13 @@ export class Game {
                 break;
             }
         }
+    }
+
+    getRoom(id) {
+        for (let i in this.tables) {
+            if (this.tables[i] === id) return this.tables[i];
+        }
+        return false;
     }
 
     tablesJson() {

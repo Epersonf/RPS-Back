@@ -3,15 +3,18 @@ import { Bot } from "./Player/Inherited/Bot.js";
 import { clamp } from "../Utility/util.js";
 
 export class Room {
-    constructor(id, game, maxAmountOfPlayers=4, name="Room", password) {
+    constructor(id, game, maxAmountOfPlayers=4, name="Room", password, playerName="Player") {
         this.name = name;
         this.password = password;
         this.id = id;
         this.game = game;
 
         this.players = [];
-        let user = new User();
+
+        let user = new User(playerName);
+        this.owner = user;
         this.players.push(user);
+
         for (let i = 0; i < maxAmountOfPlayers - 1; i++)
             this.players.push(new Bot());
 
@@ -35,9 +38,9 @@ export class Room {
     }
 
     removePlayer(id) {
-        
-    }
 
+    }
+    
     update() {
 
     }
@@ -49,5 +52,9 @@ export class Room {
             'amount_of_players': this.amountOfPlayers,
             'max_amount_of_players': this.maxAmountOfPlayers
         };
+    }
+
+    gameJson(token) {
+        return this.players.map((e) => this.players[i].json(token == this.players[i].token));
     }
 }

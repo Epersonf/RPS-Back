@@ -10,9 +10,14 @@ export const mainPath = (app) => {
 
     app.post('/',
         (req, res) => {
-            const param = req.body;
-            const newTable = game.createTable(param.max_amount_of_players, param.name, param.password);
-            res.write(JSON.stringify(newTable.json()));
+            const body = req.body;
+            const newTable = game.createTable(body.max_amount_of_players, body.name, body.password, body.player_name);
+            res.write(JSON.stringify(
+                {
+                    ...newTable.json(),
+                    'token': newTable.owner.token,
+                    'player_name': newTable.owner.name
+                }));
             res.end();
         }
     );
