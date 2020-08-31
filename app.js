@@ -23,7 +23,7 @@ chatRoute(app);
 
 GameLoop();
 
-app.listen(port, 
+app.listen(process.env.PORT || port, 
     (error) => {
         if (error) console.log("Error binding to port.")
         else console.log("Listening to port.");
