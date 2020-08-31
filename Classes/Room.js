@@ -1,6 +1,7 @@
 import { User } from "./Player/Inherited/User.js";
 import { Bot } from "./Player/Inherited/Bot.js";
 import { clamp, getRandomInt, chunkArray } from "../Utility/util.js";
+import { Chat } from "./Room/RoomChat.js";
 
 export class Room {
     constructor(id, game, maxAmountOfPlayers=4, name="Room", password, playerName="Player") {
@@ -13,15 +14,19 @@ export class Room {
 
         let user = new User(playerName);
         this.owner = user;
-        this.players.push(user);
+        this.players.push(user, this, 0);
 
         for (let i = 0; i < maxAmountOfPlayers - 1; i++)
-            this.players.push(new Bot());
+            this.players.push(new Bot(user, this, i + 1));
 
         this.amountOfPlayers = 1;
         this.maxAmountOfPlayers = clamp(maxAmountOfPlayers, 2, 4);
 
-        this.distributeCards();
+        this.loop = 0;
+
+        this.turnTimeInSeconds = 15;
+
+        this.chat = new Chat(this);
     }
 
     canJoin() {
@@ -36,7 +41,7 @@ export class Room {
         let index = this.canJoin();
         if (!index) return false;
         let deck = this.players[index].cards;
-        let user = new User(name);
+        let user = new User(name, this, index);
         user.cards = deck;
         this.players[index] = user;
         this.amountOfPlayers++;
@@ -46,9 +51,35 @@ export class Room {
     removePlayer(id) {
         
     }
+
+    getUserByToken(token) {
+        let toReturn = -1;
+        for (let i in this.players) {
+            if (token == this.players[i].token) {
+                toReturn = this.players[i];
+                break;
+            }
+        }
+        return toReturn;
+    }
     
     update() {
         this.players.forEach(e => e.update());
+        const ticksPerTurn = this.turnTimeInSeconds * 2;
+        if (this.loop == 0) {
+            //distributeCards
+            this.distributeCards();
+        } else if(this.loop <= ticksPerTurn) {
+            //
+
+
+        } else if(this.loop <= ticksPerTurn + 5) {
+
+            if(this.loop >= ticksPerTurn + 10) {
+                
+            }
+        }
+        this.loop++;
     }
 
     json() {

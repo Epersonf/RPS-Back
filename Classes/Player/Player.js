@@ -6,7 +6,7 @@
 import { generateToken } from "../../Utility/util.js";
 
 export class Player {
-    constructor(name, room) {
+    constructor(name, room, id) {
         this.room = room;
         this.token = generateToken();
         this.name = name;
@@ -28,11 +28,7 @@ export class Player {
     }
 
     update() {
-        this.afkCount--;
-    }
 
-    activityCheckout() {
-        this.afkCount = 10;
     }
 
     json(showCards) {

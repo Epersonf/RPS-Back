@@ -1,15 +1,26 @@
 import {game} from '../main-loop.js';
+import { User } from '../Classes/Player/Inherited/User.js';
 
 export const roomPath = (app) => {
     app.get('/room/:id',
         (req, res) => {
             const roomId = parseInt(req.params.id);
+            const token = req.headers.authorization;
             let room = game.getRoom(roomId);
             if (room === false) {
                 res.end();
                 return;
             }
-            res.write(JSON.stringify(room.gameJson(req.headers.authorization)));
+
+            let user = room.getUserByToken(token);
+            user.afkCheckout();
+
+            res.write(JSON.stringify(
+                {
+                    'cards': room.gameJson(token),
+                    'chat': room.chat.log
+                }
+            ));
             res.end();
         }
     );
@@ -36,7 +47,7 @@ export const roomPath = (app) => {
         }
     );
 
-    app.post('/room/:id/:playerId/:cardId',
+    app.post('/room/:id/play/:playerId/:cardId',
         (req, res) => {
             const roomId = parseInt(req.params.id);            
             const playerId = parseInt(req.params.playerId);
@@ -47,8 +58,11 @@ export const roomPath = (app) => {
                 res.end();
                 return;
             }
+            console.log("Recebido sinal de play card");
 
             room.players[playerId].playCard(cardId, token);
+            res.write(JSON.stringify({'message': 'Success!'}));
+            res.end();
         }
     );
 }
