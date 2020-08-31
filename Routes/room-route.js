@@ -42,6 +42,12 @@ export const roomPath = (app) => {
                 return;
             }
 
+            if (room.hasSomeoneNamed(req.body.player_name)) {
+                res.write(JSON.stringify({'message': 'Someone has the same name of you...'}));
+                res.end();
+                return;
+            }
+
             let user = room.addPlayer(req.body.player_name);
             res.write(JSON.stringify(
                 {

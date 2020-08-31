@@ -60,12 +60,9 @@ export function generateBattles(amountOfPlayers=4) {
 }
 
 export function getWinner(value1, value2) {
-    if (value1 % 3 + 1 == value2)
-        return -1;
-    else if (value2 % 3 + 1 == value1)
-        return 1;
-    else
-        return 0;
+    if (value1 == value2) return 0;
+    if (value1 == 0 && value2 == 2 || value1 == 1 && value2 == 0 || value1 == 2 && value2 == 1) return 1;
+    return -1;
 }
 
 export function announceWinner(p1, p2, chat) {

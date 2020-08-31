@@ -70,6 +70,13 @@ export class Room {
         return false;
     }
 
+    hasSomeoneNamed(name) {
+        for (let i in this.players) {
+            if (this.players[i].name == name) return true;
+        }
+        return false;
+    }
+
     getUserByToken(token) {
         let toReturn = -1;
         for (let i in this.players) {
