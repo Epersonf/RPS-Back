@@ -25,7 +25,8 @@ export const roomPath = (app) => {
                     'middle_cards': [
                         (p1 !== undefined) ? p1.getPlayedCard(token) : null,
                         (p2 !== undefined) ? p2.getPlayedCard(token) : null
-                    ]
+                    ],
+                    'leaderboard': room.leaderboard()
                 }
             ));
             res.end();

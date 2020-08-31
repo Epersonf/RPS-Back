@@ -150,8 +150,12 @@ export class Room {
     }
 
     leaderboard() {
-        let playersSortedByScore = this.players.sort((p1, p2) => p1.score - p2.score);
-        return playersSortedByScore.map((e) => e.name);
+        return this.players.map((e) => {
+            return {
+                'name': e.name,
+                'score': e.score
+            };
+        });
     }
 
     distributeCards() {
