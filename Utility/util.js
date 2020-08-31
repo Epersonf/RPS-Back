@@ -37,7 +37,7 @@ export function chunkArray(myArray, chunk_size){
 
 export function generateBattles(amountOfPlayers=4) {
     let buildBattles = [];
-    let cards = new Array(amountOfPlayers).fill(9);
+    let cards = new Array(amountOfPlayers).fill(9 + (amountOfPlayers % 3 == 0) ? 1 : 0);
     let v = true;
     while (v) {
         for (let i = 0; i < amountOfPlayers; i++) {
