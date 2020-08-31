@@ -16,6 +16,7 @@ export const mainPath = (app) => {
                 {
                     ...newTable.json(),
                     'token': newTable.owner.token,
+                    'player_id': newTable.owner.id,
                     'player_name': newTable.owner.name
                 }));
             res.end();
