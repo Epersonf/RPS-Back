@@ -108,6 +108,7 @@ export class Room {
                 this.loop = -1;
                 this.chat.broadcastMessage("Game ended.");
                 this.players.forEach((e) => e.score = 0);
+                this.pc = 0;
             } else {
                 //announce winner
                 this.loop = 1;
