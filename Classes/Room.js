@@ -1,7 +1,8 @@
 import { User } from "./Player/Inherited/User.js";
 import { Bot } from "./Player/Inherited/Bot.js";
-import { clamp, getRandomInt, chunkArray } from "../Utility/util.js";
+import { clamp, getRandomInt, chunkArray, generateBattles, getWinner, announceWinner } from "../Utility/util.js";
 import { Chat } from "./Room/RoomChat.js";
+import { game } from "../main-loop.js";
 
 export class Room {
     constructor(id, game, maxAmountOfPlayers=4, name="Room", password, playerName="Player") {
@@ -17,16 +18,20 @@ export class Room {
         this.players.push(user);
 
         for (let i = 0; i < maxAmountOfPlayers - 1; i++)
-            this.players.push(new Bot(user, this, i + 1));
+            this.players.push(new Bot(this, i + 1));
 
         this.amountOfPlayers = 1;
         this.maxAmountOfPlayers = clamp(maxAmountOfPlayers, 2, 4);
 
         this.loop = 0;
 
-        this.turnTimeInSeconds = 15;
+        this.turnTimeInTicks = 60;
 
         this.chat = new Chat(this);
+
+        this.battles = generateBattles(this.maxAmountOfPlayers);
+        this.pc = 0;
+        this.canShowCards = false;
     }
 
     canJoin() {
@@ -49,7 +54,20 @@ export class Room {
     }
 
     removePlayer(id) {
-        
+        let bot = new Bot(this, id);
+        bot.cards = this.players[id].cards;
+        bot.canPlay = this.players[id].canPlay;
+        this.chat.broadcastMessage(this.players[id].name + ' left the game.');
+        this.players[id] = bot;
+        this.amountOfPlayers--;
+        if (!this.hasUsers()) game.removeTable(this.id);
+    }
+
+    hasUsers() {
+        for (let i in this.players)
+            if (this.players[i] instanceof User)
+                return true;
+        return false;
     }
 
     getUserByToken(token) {
@@ -65,21 +83,51 @@ export class Room {
     
     update() {
         this.players.forEach(e => e.update());
-        const ticksPerTurn = this.turnTimeInSeconds * 2;
         if (this.loop == 0) {
             //distributeCards
             this.distributeCards();
-        } else if(this.loop <= ticksPerTurn) {
-            //
+        } else if(this.loop <= this.turnTimeInTicks) {
+            //enable playing
+            this.setBattleState(true);
+            if (this.player1.playedCard != -1 && this.player2.playedCard != -1) this.loop = this.turnTimeInTicks;
 
-
-        } else if(this.loop <= ticksPerTurn + 5) {
-
-            if(this.loop >= ticksPerTurn + 10) {
-                
+        } else if(this.loop <= this.turnTimeInTicks + 5) {
+            this.setBattleState(false);
+            //show cards
+            this.canShowCards = true;
+        } else if(this.loop >= this.turnTimeInTicks + 10) {
+            if (this.pc >= this.battles.length) {
+                //end match
+                this.loop = -1;
+                this.chat.broadcastMessage("Game ended.");
+            } else {
+                //announce winner
+                this.loop = 1;
+                announceWinner(this.player1, this.player2, this.chat);
             }
+            this.player1.playedCard = -1;
+            this.player2.playedCard = -1;
+            this.canShowCards = false;
         }
         this.loop++;
+    }
+
+    setBattleState(v) {
+        if (this.executingBattle == v) return;
+        const battle = this.battles[this.pc];
+        this.player1 = this.players[battle[0]];
+        this.player2 = this.players[battle[1]];
+        this.executingBattle = v;
+        if (v) {
+            this.chat.broadcastMessage('Match between ' + this.player1.name + ' and ' + this.player2.name);
+        } else {
+            this.player1.playCard(0, this.player1.token);
+            this.player2.playCard(0, this.player2.token);
+            this.chat.broadcastMessage('Match between ' + this.player1.name + ' and ' + this.player2.name + ' ended.');
+            this.pc++;
+        }
+        this.player1.canPlay = v;
+        this.player2.canPlay = v;
     }
 
     json() {
@@ -99,6 +147,11 @@ export class Room {
                 'index': index
             }
         });
+    }
+
+    leaderboard() {
+        let playersSortedByScore = this.players.sort((p1, p2) => p1.score - p2.score);
+        return playersSortedByScore.map((e) => e.name);
     }
 
     distributeCards() {

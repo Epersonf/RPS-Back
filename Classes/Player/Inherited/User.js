@@ -9,7 +9,7 @@ export class User extends Player {
     update() {
         this.afkCount--;
         if (this.afkCount < 0) {
-            this.room.removePlayer();
+            this.room.removePlayer(this.id);
         }
     }
 

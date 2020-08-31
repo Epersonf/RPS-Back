@@ -12,6 +12,10 @@ export class Player {
         this.name = name;
         this.cards = [];
         this.afkCount = 10;
+        this.canPlay = false;
+        this.score = 0;
+        this.playedCard = -1;
+        this.id = id;
     }
 
     addCard(id) {
@@ -23,16 +27,20 @@ export class Player {
     }
 
     playCard(id, token) {
-        if (token != this.token) return;
+        if (!this.canPlay || token != this.token) return;
+        this.playedCard = this.cards[id];
         this.removeCard(id);
-    }
-
-    update() {
-
+        this.canPlay = false;
     }
 
     json(showCards) {
         if (!showCards) return {'name': this.name, 'cards': new Array(this.cards.length).fill(-1)};
         return {'name': this.name, 'cards': this.cards};
+    }
+
+    getPlayedCard(token) {
+        if (this.playedCard === -1) return null;
+        if (this.token != token && !this.room.canShowCards) return -1;
+        return this.playedCard;
     }
 }

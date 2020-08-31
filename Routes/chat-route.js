@@ -11,7 +11,6 @@ export const chatRoute = (app) => {
                 res.end();
                 return;
             }
-            console.log('Recebido sinal de enviar mensagem');
             const success = room.chat.addMessage(playerId, token, req.body.msg);
 
             res.write(JSON.stringify(

@@ -13,12 +13,19 @@ export const roomPath = (app) => {
             }
 
             let user = room.getUserByToken(token);
-            user.afkCheckout();
+            if (user !== -1) user.afkCheckout();
+
+            const p1 = room.player1;
+            const p2 = room.player2;
 
             res.write(JSON.stringify(
                 {
                     'cards': room.gameJson(token),
-                    'chat': room.chat.log
+                    'chat': room.chat.log,
+                    'middle_cards': [
+                        (p1 !== undefined) ? p1.getPlayedCard(token) : null,
+                        (p2 !== undefined) ? p2.getPlayedCard(token) : null
+                    ]
                 }
             ));
             res.end();
@@ -58,7 +65,6 @@ export const roomPath = (app) => {
                 res.end();
                 return;
             }
-            console.log("Recebido sinal de play card");
 
             room.players[playerId].playCard(cardId, token);
             res.write(JSON.stringify({'message': 'Success!'}));
