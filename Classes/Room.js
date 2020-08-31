@@ -12,9 +12,9 @@ export class Room {
 
         this.players = [];
 
-        let user = new User(playerName);
+        let user = new User(playerName, this, 0);
         this.owner = user;
-        this.players.push(user, this, 0);
+        this.players.push(user);
 
         for (let i = 0; i < maxAmountOfPlayers - 1; i++)
             this.players.push(new Bot(user, this, i + 1));
