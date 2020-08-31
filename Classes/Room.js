@@ -47,8 +47,8 @@ export class Room {
         if (!id) return false;
         let deck = this.players[id].cards;
         let user = new User(name, this, id);
-        if (this.player1 == this.players[id]) this.player1[id] = user;
-        if (this.player2 == this.players[id]) this.player2[id] = user;
+        if (this.player1 == this.players[id]) this.player1 = user;
+        if (this.player2 == this.players[id]) this.player2 = user;
         user.cards = deck;
         user.canPlay = this.players[id].canPlay;
         this.players[id] = user;
@@ -61,6 +61,8 @@ export class Room {
         bot.cards = this.players[id].cards;
         bot.canPlay = this.players[id].canPlay;
         this.chat.broadcastMessage(this.players[id].name + ' left the game.');
+        if (this.player1 == this.players[id]) this.player1 = bot;
+        if (this.player2 == this.players[id]) this.player2 = bot;
         this.players[id] = bot;
         this.amountOfPlayers--;
         if (!this.hasUsers()) game.removeTable(this.id);
