@@ -43,12 +43,15 @@ export class Room {
     }
 
     addPlayer(name) {
-        let index = this.canJoin();
-        if (!index) return false;
-        let deck = this.players[index].cards;
-        let user = new User(name, this, index);
+        let id = this.canJoin();
+        if (!id) return false;
+        let deck = this.players[id].cards;
+        let user = new User(name, this, id);
+        if (this.player1 == this.players[id]) this.player1[id] = user;
+        if (this.player2 == this.players[id]) this.player2[id] = user;
         user.cards = deck;
-        this.players[index] = user;
+        user.canPlay = this.players[id].canPlay;
+        this.players[id] = user;
         this.amountOfPlayers++;
         return user;
     }
