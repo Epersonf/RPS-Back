@@ -52,6 +52,7 @@ export const roomPath = (app) => {
             res.write(JSON.stringify(
                 {
                     'id': room.id,
+                    'player_id': user.id,
                     'name': user.name,
                     'token': user.token,
                     'room': roomId
