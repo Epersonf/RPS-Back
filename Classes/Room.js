@@ -45,27 +45,26 @@ export class Room {
     addPlayer(name) {
         let id = this.canJoin();
         if (!id) return false;
-        let deck = this.players[id].cards;
         let user = new User(name, this, id);
-        if (this.player1 == this.players[id]) this.player1 = user;
-        if (this.player2 == this.players[id]) this.player2 = user;
-        user.cards = deck;
-        user.canPlay = this.players[id].canPlay;
-        this.players[id] = user;
+        this.exchangeUser(id, user);
         this.amountOfPlayers++;
         return user;
     }
 
     removePlayer(id) {
         let bot = new Bot(this, id);
-        bot.cards = this.players[id].cards;
-        bot.canPlay = this.players[id].canPlay;
         this.chat.broadcastMessage(this.players[id].name + ' left the game.');
-        if (this.player1 == this.players[id]) this.player1 = bot;
-        if (this.player2 == this.players[id]) this.player2 = bot;
-        this.players[id] = bot;
+        this.exchangeUser(id, bot);
         this.amountOfPlayers--;
         if (!this.hasUsers()) game.removeTable(this.id);
+    }
+
+    exchangeUser(id, newUser) {
+        if (this.player1 == this.players[id]) this.player1 = newUser;
+        if (this.player2 == this.players[id]) this.player2 = newUser;
+        newUser.canPlay = this.players[id].canPlay;
+        newUser.cards = this.players[id].cards;
+        this.players[id] = newUser;
     }
 
     hasUsers() {
