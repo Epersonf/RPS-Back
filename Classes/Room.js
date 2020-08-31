@@ -25,7 +25,7 @@ export class Room {
 
         this.loop = 0;
 
-        this.turnTimeInTicks = 60;
+        this.turnTimeInTicks = 240;
 
         this.chat = new Chat(this);
 
@@ -172,7 +172,7 @@ export class Room {
     }
 
     distributeCards() {
-        let amountOfEachType = (this.maxAmountOfPlayers * 3);
+        let amountOfEachType = (this.maxAmountOfPlayers * 3) + ((this.maxAmountOfPlayers % 3) == 0 ? 1 : 0);
         let cards = new Array(amountOfEachType).fill(0).concat(new Array(amountOfEachType).fill(1)).concat(new Array(amountOfEachType).fill(2));
         for (let i = 0; i < 100; i++) {
             let index1 = getRandomInt(0, cards.length - 1);
