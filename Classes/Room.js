@@ -63,6 +63,7 @@ export class Room {
         if (this.player1 == this.players[id]) this.player1 = newUser;
         if (this.player2 == this.players[id]) this.player2 = newUser;
         newUser.canPlay = this.players[id].canPlay;
+        newUser.playedCard = this.players[id].playedCard;
         newUser.cards = this.players[id].cards;
         newUser.score = this.players[id].score;
         this.players[id] = newUser;
