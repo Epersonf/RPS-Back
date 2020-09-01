@@ -137,7 +137,6 @@ export class Room {
         } else {
             this.player1.playCard(0, this.player1.token);
             this.player2.playCard(0, this.player2.token);
-            this.chat.broadcastMessage('Match between ' + this.player1.name + ' and ' + this.player2.name + ' ended.');
             this.pc++;
         }
         this.player1.canPlay = v;
