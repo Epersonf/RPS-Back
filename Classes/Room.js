@@ -108,22 +108,36 @@ export class Room {
             //show cards
             this.canShowCards = true;
         } else if(this.loop >= this.turnTimeInTicks + 10) {
-            if (this.pc >= this.battles.length) {
-                //end match
-                this.loop = -1;
-                this.chat.broadcastMessage("Game ended.");
-                this.players.forEach((e) => e.score = 0);
-                this.pc = 0;
-            } else {
-                //announce winner
-                this.loop = 1;
-                announceWinner(this.player1, this.player2, this.chat);
-            }
+            announceWinner(this.player1, this.player2, this.chat);
             this.player1.playedCard = -1;
             this.player2.playedCard = -1;
             this.canShowCards = false;
+
+            if (this.pc >= this.battles.length)
+                this.endMatch();
+            else
+                this.loop = 1;
         }
         this.loop++;
+    }
+
+    endMatch() {
+        this.loop = -1;
+        this.chat.broadcastMessage("Game ended. Greater score: " + this.getLeader().join(', '));
+        this.players.forEach((e) => e.score = 0);
+        this.pc = 0;
+    }
+
+    getLeader() {
+        let leaders = [];
+        let record = -1;
+        this.players.forEach((e) => {
+            if (e.score > record) {
+                leaders = [e.name];
+                record = e.score;
+            } else if (e.score == record) leaders.push(e.name);
+        });
+        return leaders;
     }
 
     setBattleState(v) {
@@ -131,14 +145,18 @@ export class Room {
         const battle = this.battles[this.pc];
         this.player1 = this.players[battle[0]];
         this.player2 = this.players[battle[1]];
-        this.executingBattle = v;
         if (v) {
+            if (this.player1.cards.length == 0 || this.player2.cards.length == 0) {
+                this.pc++;
+                return;
+            }
             this.chat.broadcastMessage('Match between ' + this.player1.name + ' and ' + this.player2.name);
         } else {
             this.player1.playCard(0, this.player1.token);
             this.player2.playCard(0, this.player2.token);
             this.pc++;
         }
+        this.executingBattle = v;
         this.player1.canPlay = v;
         this.player2.canPlay = v;
     }
