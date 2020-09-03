@@ -32,6 +32,8 @@ export class Room {
         this.battles = generateBattles(this.maxAmountOfPlayers);
         this.pc = 0;
         this.canShowCards = false;
+
+        this.broadcast = 'Starting game...';
     }
 
     canJoin() {
@@ -53,7 +55,7 @@ export class Room {
 
     removePlayer(id) {
         let bot = new Bot(this, id);
-        this.chat.broadcastMessage(this.players[id].name + ' left the game.');
+        this.broadcast = (this.players[id].name + ' left the game.');
         this.exchangeUser(id, bot);
         this.amountOfPlayers--;
         if (!this.hasUsers()) game.removeTable(this.id);
@@ -104,7 +106,7 @@ export class Room {
         this.players.forEach(e => e.update());
         if (this.loop <= 0) {
             //distributeCards
-            this.chat.broadcastMessage('Distributing cards...');
+            this.broadcast = ('Distributing cards...');
             this.distributeCards();
         } else if(this.loop <= this.turnTimeInTicks) {
             //enable playing
@@ -116,7 +118,7 @@ export class Room {
             //show cards
             this.canShowCards = true;
         } else if(this.loop >= this.turnTimeInTicks + 10) {
-            announceWinner(this.player1, this.player2, this.chat);
+            announceWinner(this.player1, this.player2, this);
             this.player1.playedCard = -1;
             this.player2.playedCard = -1;
             this.canShowCards = false;
@@ -130,7 +132,7 @@ export class Room {
 
     endMatch() {
         this.loop = -1;
-        this.chat.broadcastMessage("Game ended. Greater score: " + this.getLeader().join(', '));
+        this.broadcast = ("Game ended. Greater score: " + this.getLeader().join(', '));
         this.players.forEach((e) => e.score = 0);
         this.pc = 0;
     }
@@ -153,7 +155,7 @@ export class Room {
         this.player1 = this.players[battle[0]];
         this.player2 = this.players[battle[1]];
         if (v) {
-            this.chat.broadcastMessage('Match between ' + this.player1.name + ' and ' + this.player2.name);
+            this.broadcast = ('Match between ' + this.player1.name + ' and ' + this.player2.name);
         } else {
             this.player1.playCard(0, this.player1.token);
             this.player2.playCard(0, this.player2.token);

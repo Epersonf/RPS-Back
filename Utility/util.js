@@ -65,19 +65,19 @@ export function getWinner(value1, value2) {
     return -1;
 }
 
-export function announceWinner(p1, p2, chat) {
+export function announceWinner(p1, p2, room) {
     let winner;
     switch (getWinner(p1.playedCard, p2.playedCard)) {
         case 1:
-            chat.broadcastMessage("Match won by " + p1.name);
+            room.broadcast = "Match won by " + p1.name;
             winner = p1;
             break;
         case -1:
-            chat.broadcastMessage("Match won by " + p2.name);
+            room.broadcast = "Match won by " + p2.name;
             winner = p2;
             break;
         default:
-            chat.broadcastMessage("Draw between " + p1.name + ' and ' + p2.name);
+            room.broadcast = "Draw between " + p1.name + ' and ' + p2.name;
             break;
     }
     if (winner) winner.score++;
