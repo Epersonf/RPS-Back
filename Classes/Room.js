@@ -149,6 +149,7 @@ export class Room {
         if (v) {
             if (this.player1.cards.length == 0 || this.player2.cards.length == 0) {
                 this.pc++;
+                this.loop = 1;
                 return;
             }
             this.chat.broadcastMessage('Match between ' + this.player1.name + ' and ' + this.player2.name);
