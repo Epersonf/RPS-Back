@@ -94,12 +94,20 @@ export class Room {
         return toReturn;
     }
     
+    isOutOfCards() {
+        this.players.forEach(e => {
+            if (e.cards.length > 0) return true;
+        });
+        return false;
+    }
+
     update() {
         this.players.forEach(e => e.update());
         if (this.loop == 0) {
             //distributeCards
             this.distributeCards();
         } else if(this.loop <= this.turnTimeInTicks) {
+            if (this.isOutOfCards()) this.endMatch();
             //enable playing
             this.setBattleState(true);
             if (this.player1.playedCard != -1 && this.player2.playedCard != -1) this.loop = this.turnTimeInTicks;
@@ -113,11 +121,7 @@ export class Room {
             this.player1.playedCard = -1;
             this.player2.playedCard = -1;
             this.canShowCards = false;
-
-            if (this.pc >= this.battles.length)
-                this.endMatch();
-            else
-                this.loop = 1;
+            this.loop = 1;
         }
         this.loop++;
     }
@@ -147,11 +151,6 @@ export class Room {
         this.player1 = this.players[battle[0]];
         this.player2 = this.players[battle[1]];
         if (v) {
-            if (this.player1.cards.length == 0 || this.player2.cards.length == 0) {
-                this.pc++;
-                this.loop = 1;
-                return;
-            }
             this.chat.broadcastMessage('Match between ' + this.player1.name + ' and ' + this.player2.name);
         } else {
             this.player1.playCard(0, this.player1.token);
