@@ -95,19 +95,18 @@ export class Room {
     }
     
     isOutOfCards() {
-        this.players.forEach(e => {
-            if (e.cards.length > 0) return true;
-        });
-        return false;
+        for (let i in this.players)
+            if (this.players[i].cards.length > 0) return false;
+        return true;
     }
 
     update() {
         this.players.forEach(e => e.update());
-        if (this.loop == 0) {
+        if (this.loop <= 0) {
             //distributeCards
+            this.chat.broadcastMessage('Distributing cards...');
             this.distributeCards();
         } else if(this.loop <= this.turnTimeInTicks) {
-            if (this.isOutOfCards()) this.endMatch();
             //enable playing
             this.setBattleState(true);
             if (this.player1.playedCard != -1 && this.player2.playedCard != -1) this.loop = this.turnTimeInTicks;
@@ -121,7 +120,10 @@ export class Room {
             this.player1.playedCard = -1;
             this.player2.playedCard = -1;
             this.canShowCards = false;
-            this.loop = 1;
+            if (this.isOutOfCards())
+                this.endMatch();
+            else
+                this.loop = 1;
         }
         this.loop++;
     }
@@ -146,16 +148,11 @@ export class Room {
     }
 
     setBattleState(v) {
-        if (this.executingBattle == v) return;
+        if (this.executingBattle == v || this.battles.length <= this.pc) return;
         const battle = this.battles[this.pc];
         this.player1 = this.players[battle[0]];
         this.player2 = this.players[battle[1]];
         if (v) {
-            if (this.player1.cards.length == 0 || this.player2.cards.length == 0) {
-                this.pc++;
-                this.loop = 1;
-                return;
-            }
             this.chat.broadcastMessage('Match between ' + this.player1.name + ' and ' + this.player2.name);
         } else {
             this.player1.playCard(0, this.player1.token);
